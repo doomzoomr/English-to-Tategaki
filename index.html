@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>English → Japanese Tategaki Translator</title>
+    <style>
+        body {
+            background: #f4f4f4;
+            font-family: "Noto Serif JP", "Yu Mincho", serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        textarea {
+            width: 80%;
+            height: 100px;
+            font-size: 16px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        #output {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-size: 28px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            min-height: 300px;
+        }
+    </style>
+</head>
+<body>
+<h1>English → Japanese Tategaki</h1>
+<textarea id="input" placeholder="Type English here..."></textarea><br>
+<button onclick="translateText()">Translate & Show</button>
+<div id="output"></div>
+
+<script>
+    async function translateText() {
+        let text = document.getElementById("input").value;
+        if (!text) return;
+
+        // Use free Google Translate API via fetch
+        let url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ja&dt=t&q=${encodeURIComponent(text)}`;
+
+        try {
+            let res = await fetch(url);
+            let data = await res.json();
+            let translated = data[0].map(x => x[0]).join("");
+            document.getElementById("output").innerText = translated;
+        } catch (e) {
+            document.getElementById("output").innerText = "Translation failed.";
+        }
+    }
+</script>
+</body>
+</html>
